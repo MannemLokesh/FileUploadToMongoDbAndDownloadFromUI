@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Download Example</title>
+</head>
+<body>
+
+<!-- Add a button or another trigger element to initiate the download -->
+<button onclick="downloadFile('your_file_id')">Download File</button>
+
+<script>
+    function downloadFile(fileId) {
+        // Make an AJAX request to download the file
+        fetch(`/api/files/download/${fileId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create a link element and trigger a click to initiate download
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `downloaded_file.pdf`; // Set the desired file name
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => console.error('Error downloading file:', error));
+    }
+</script>
+
+</body>
+</html>

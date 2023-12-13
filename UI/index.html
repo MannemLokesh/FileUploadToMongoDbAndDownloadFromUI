@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Preview Example</title>
+</head>
+<body>
+
+<!-- Add an iframe to display the file preview -->
+<iframe id="filePreview" style="width: 100%; height: 600px;"></iframe>
+
+<!-- Add a button or another trigger element to initiate the preview -->
+<button onclick="previewFile('Coredns Setup.pdf')">Preview File</button>
+
+<script>
+    function previewFile(fileId) {
+        // Make an AJAX request to download the file
+        fetch(`http://localhost:7000/download/${fileId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create a Blob URL for the file content
+                const url = window.URL.createObjectURL(blob);
+
+                // Display the file content in the iframe
+                const iframe = document.getElementById('filePreview');
+                iframe.src = url;
+                alert(iframe.src);
+                alert(url);
+
+            })
+            .catch(error => console.error('Error previewing file:', error));
+    }
+</script>
+
+</body>
+</html>
+
